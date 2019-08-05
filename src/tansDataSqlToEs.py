@@ -19,13 +19,15 @@ es = Elasticsearch([{'host':'127.0.0.1','port':9200}])
 s=time.time()
 actions = []
 for item in ret:
-    data = {"name": item[0], "phone": item[1], "addr_name": item[2], "location": item[3]}
-    action = {
-        "_index": "customer-new",
-        "_source": data
-    }
-    #使用批量写入比单个写入快很多
-    actions.append(action)
+    if item[3] != None:
+        loca = {"lon": float(item[3].split(",")[0]),"lat":float(item[3].split(",")[1])}
+        data = {"name": item[0], "phone": item[1], "addr_name": item[2], "location": loca}
+        action = {
+            "_index": "customer-2",
+            "_source": data
+        }
+        #使用批量写入比单个写入快很多
+        actions.append(action)
 a = helpers.bulk(es, actions)
 e = time.time()
 print("trans complete {}:{}".format(a, e-s))
