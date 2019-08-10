@@ -28,6 +28,7 @@ for item in ret:
         }
         #使用批量写入比单个写入快很多
         actions.append(action)
+print(actions)
 a = helpers.bulk(es, actions)
 e = time.time()
 print("trans complete {}:{}".format(a, e-s))
