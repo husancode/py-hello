@@ -30,10 +30,12 @@ def log(func):
         return func(*args, **kw)
     return wrapper
 @log
-def now():
+def now(*args, **kw):
     print((datetime.datetime.now()))
 f = now
-f()
+a =(1,2,3,4)
+dc = {'ac':'aa','ab':1}
+f(a, **dc)
 
 #person('husan',33, **extra)
 
