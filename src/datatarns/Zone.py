@@ -1,3 +1,4 @@
+# 更新zone位置数据（标准化）
 import pymysql
 conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment-20190810", port=3306, charset="utf8")
 cur = conn.cursor()

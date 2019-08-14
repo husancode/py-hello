@@ -1,7 +1,12 @@
 #清洗zone表坐标数据
 import pymysql
+import requests
+import json
 
-def trans(data):
+##坐标首位相连，如果点数小于4个（需要有大于3个不同位置的点），数据无效，返回空数组
+## trans=True,调用高德gps坐标转换接口转换坐标
+def trans(data, trans=True):
+    result = []
     first = None
     last = None
     for a in data:
@@ -11,10 +16,20 @@ def trans(data):
     if(first != last):
         data.append(first)
     if(len(data) < 4):
-        return []
+        pass
     else:
-        return data
+        result = data
+    if trans:
+        location = ";".join(map(lambda x: x.replace(' ',','),result))
+        url = r"https://restapi.amap.com/v3/assistant/coordinate/convert?key=c358894e83dc95b4b38bb6855d4b2954&locations={}&coordsys=gps".format(location)
+        resText = requests.get(url)
+        res = json.loads(resText.text)
+        if 'locations' in res:
+            location = res['locations']
+            result = list(map(lambda x: x.replace(',',' '),location.split(";")))
+    return result
 
+## 根据数组返回坐标mysql插入文本，多个数组MULTIPOLYGON，单个数组返回POLYGON
 def toText(data):
     if(type(data) == list):
         if(type(data[0]) == list):
@@ -26,7 +41,7 @@ def toText(data):
             return result
         else:
             return 'POLYGON(('+",".join(data)+'))'
-
+## 根据文本解析成坐标数组，多个区域返回（2，arr），单个区域返回(1,arr),无效数据返回(0,[])
 def fromText(text):
     _start_str = text[:7]
     if('POLYGON' == _start_str):
@@ -47,8 +62,9 @@ def fromText(text):
 
 conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment-20190810", port=3306, charset="utf8")
 cur = conn.cursor()
+
 sql = r"select * from zone where amap_polygongeo_u is null"
-#sql = r"select * from zone where id=1"
+#sql = r"select * from zone where id=2"
 
 cur.execute(sql)
 r = cur.fetchall()
@@ -82,6 +98,7 @@ for item in r:
         try:
             r = cur.execute(sql)
             print(r)
+            pass
         except Exception as e:
             print('Error:', e)
         finally:
