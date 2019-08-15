@@ -14,6 +14,7 @@ except Exception as e:
     pass
 
 ssql = r"SELECT `id`,`division_id`,`coordinate`,`customer_name`,`addr_name`,`addr_detail` FROM t_install_customer WHERE coordinate IS NOT NULL"
+
 cur.execute(ssql)
 
 zoneCur = conn.cursor()
@@ -49,14 +50,16 @@ while(True):
             addrArr = row[4].split("/")
             zone = zoneList[len(zoneList) - 1]
             zoneNameArr = zone[0].split("->")
-            if (addrArr[0] != zoneNameArr[1]):
-                jiedaoCmpList.append(row)
-            elif (addrArr[1] != zoneNameArr[2]):
-                shequCmpList.append(row)
-            elif(row[1] != zone[1]):
-                #upSql = r"UPDATE t_install_customer SET division_id_old=division_id,addr_name_old=addr_name,division_id='{}',addr_name='{}' WHERE id='{}'".format(zone[1],zone[0][5:],row[0])
+            # if (addrArr[0] != zoneNameArr[1]):
+            #     jiedaoCmpList.append(row)
+            # elif (addrArr[1] != zoneNameArr[2]):
+            #     shequCmpList.append(row)
+            #     print(row)
+            #     print(zoneList)
+            if(row[1] != zone[1]):
+                upSql = r"UPDATE t_install_customer SET division_id_old=division_id,addr_name_old=addr_name,division_id='{}',addr_name='{}' WHERE id='{}'".format(zone[1],zone[0][5:].replace('->','/'),row[0])
                 tranList.append(row)
-                #zoneCur.execute(upSql)
+                zoneCur.execute(upSql)
 conn.commit()
 cur.close()
 zoneCur.close()
