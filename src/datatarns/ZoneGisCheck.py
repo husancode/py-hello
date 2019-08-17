@@ -3,7 +3,7 @@ import pymysql
 import requests
 import json
 
-##坐标首位相连，如果点数小于4个（需要有大于3个不同位置的点），数据无效，返回空数组
+##坐标首位相连，如果点数小于4个（需要有大于3个不同位置的点），相邻相同点去除，数据无效，返回空数组
 ## trans=True,调用高德gps坐标转换接口转换坐标
 def trans(data, trans=True):
     result = []
@@ -12,6 +12,8 @@ def trans(data, trans=True):
     for a in data:
         if(first == None):
             first = a
+        if a == last:
+            data.remove(a)
         last = a
     if(first != last):
         data.append(first)

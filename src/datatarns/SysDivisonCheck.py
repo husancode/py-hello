@@ -12,7 +12,6 @@ cur.execute(r"SELECT id FROM t_sys_division  WHERE `name`='西湖区'")
 rootDivisionId = cur.fetchone()[0]
 print(rootDivisionId)
 
-
 def getName(sysMap, v, root):
     name=''
     division = v
@@ -80,10 +79,8 @@ for row in ret2:
                         r"`zoom`,`user_id`,`emap_type`,`create_by`,`create_date`,`del_flag`) " \
                         r"VALUES('{}','{}','{}','{}','{}',4,'',0,NULL,1,'husan',NOW(),0)".format(newDivision[0], newDivision[1], newDivision[1],
                                                                                                  newDivision[2],newDivision[3])
-            print(insertSql)
             print(cur.execute(insertSql))
             updateSql = r"update zone set division_id='{}' where id={}".format(newDivision[0], row[0])
-            print(updateSql)
             print(cur.execute(updateSql))
 
 cur.close()
