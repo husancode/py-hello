@@ -2,8 +2,9 @@
 import pymysql
 import logging
 logging.basicConfig(level=logging.INFO)
+from config import DB
 
-conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment-20190810", port=3306, charset="utf8")
+conn = pymysql.connect(host=DB[0], user=DB[1], passwd=DB[2], db=DB[3], port=DB[4], charset="utf8")
 cur = conn.cursor()
 
 sql = r"SELECT id,division_id,addr_name,addr_detail,division_id_old,addr_name_old FROM t_install_customer WHERE division_id_old IS NOT NULL "
@@ -12,15 +13,10 @@ customers = cur.fetchall()
 print("customers:", len(customers))
 for customer in customers:
     ## 更新客户关联设备信息
-    sql = """SELECT
-		t.device_id as 'deviceId',
-		t.addr_name as 'addrName',
-		t.addr_detail as 'addrDetail',
-		r.build_id as 'buildId',
-		r.floor
-		from v_nb_dtu_model t
-		left join t_install_record r on r.sn=t.serial_no
-		where r.customer_id='{}'""".format(customer[0])
+    sql = """SELECT sn.device_id 
+		FROM v_all_sn sn LEFT JOIN t_install_record t ON sn.serial_no=t.sn  
+		where t.customer_id='{}'""".format(customer[0])
+    print(sql)
     cur.execute(sql)
     devices = cur.fetchall()
     for device in devices:

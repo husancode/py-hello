@@ -6,7 +6,7 @@ import requests
 import json
 import lnglatTrans
 
-conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment-20190810", port=3306, charset="utf8")
+conn = pymysql.connect(host='36.26.64.1', user = "equipment", passwd="equiPment888rUnyUan", db="equipment", port=44444, charset="utf8")
 cur = conn.cursor()
 
 sqlAddColumn = r"ALTER TABLE t_amap_basics ADD COLUMN lnglat_new GEOMETRY DEFAULT NULL"

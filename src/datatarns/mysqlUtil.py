@@ -1,8 +1,7 @@
 import pymysql
-
+from config import DB
 def connInit():
-    conn = pymysql.connect(host='192.168.50.178', user="root", passwd="123456", db="equipment-20190810", port=3306,
-                           charset="utf8")
+    conn = pymysql.connect(host=DB[0], user=DB[1], passwd=DB[2], db=DB[3], port=DB[4], charset="utf8")
     return conn
 
 def getTables(ignore):
@@ -42,12 +41,10 @@ def testTable(table, *field):
         found = False
         for column in columns:
             if(f == column[0]):
-                found = True
-                break
+                return True
         if(found == False):
             return False
     return True
-
 
 def tableScan(ignore, *field):
     tables = getTables(ignore)

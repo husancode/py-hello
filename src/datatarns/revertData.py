@@ -56,8 +56,6 @@ def modify_zone():
     print(i)
     conn.commit()
 revert_customer()
-#revert_division()
-#rever_zone()
-#updat()
+
 cur.close()
 conn.close()
