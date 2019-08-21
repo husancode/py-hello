@@ -53,7 +53,23 @@ def statTcpStatus():
             count_dict[peer.status] = 1
     return count_dict
 
-print(statTcpStatus())
+def printTcp(status=None, port=None):
+    """
+    打印符合条件的连接
+    :param status:
+    :return:
+    """
+    netstat = psutil.net_connections()
+    for peer in netstat:
+        if status :
+            if(peer.status == status):
+                print(peer)
+                continue
+        if port:
+            if((hasattr(peer.laddr, 'port') and peer.laddr.port == port) or (peer.laddr and peer.raddr.port == port)):
+                print(peer)
+                continue
+printTcp(port=20880)
 
 
 def test():
