@@ -30,7 +30,7 @@ def statLocalTcp(port):
     count_dict = dict()
     netstat = psutil.net_connections()
     for peer in netstat:
-        if (hasattr(peer.laddr, 'ip')):
+        if (hasattr(peer.laddr, 'port')):
             if (peer.laddr.port == port):
                 print(peer)
                 if peer.status in count_dict:
@@ -38,6 +38,32 @@ def statLocalTcp(port):
                 else:
                     count_dict[peer.status] = 1
     return count_dict
+
+def statTcp(*args):
+    netstat = psutil.net_connections()
+    for peer in netstat:
+        for arg in args:
+            if(test(peer, arg)):
+                print(peer)
+                break
+
+
+def test(peer, ipPort):
+    if(len(ipPort) == 1):
+        port = ipPort[0]
+        if (hasattr(peer.laddr, 'port')):
+            if (peer.laddr.port == port):
+                return True
+    elif(len(ipPort) >= 2):
+        port = ipPort[0]
+        ip = ipPort[1]
+        if (hasattr(peer.raddr, 'ip')):
+            if (peer.raddr.ip == ip and peer.raddr.port == port):
+                return True
+    return False
+
+
+
 
 def statTcpStatus():
     """
@@ -66,11 +92,11 @@ def printTcp(status=None, port=None):
                 print(peer)
                 continue
         if port:
-            if((hasattr(peer.laddr, 'port') and peer.laddr.port == port) or (peer.laddr and peer.raddr.port == port)):
+            if((hasattr(peer.laddr, 'port') and peer.laddr.port == port) or (hasattr(peer.raddr, 'port') and peer.raddr.port == port)):
                 print(peer)
                 continue
-printTcp(port=20880)
 
+statTcp((3306,),(3306,'::1'))
 
 def test():
     while(True):
