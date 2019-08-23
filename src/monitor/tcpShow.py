@@ -63,9 +63,6 @@ def test(peer, ipPort):
     return False
 
 
-
-
-
 def statTcpStatus():
     """
     统计本机连接状态
@@ -97,7 +94,7 @@ def printTcp(status=None, port=None):
                 print(peer)
                 continue
 
-statTcp((3306,),(3306,'::1'))
+statTcp((3306,'192.168.50.178'))
 
 def test():
     while(True):
