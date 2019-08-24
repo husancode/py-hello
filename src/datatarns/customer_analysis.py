@@ -96,6 +96,7 @@ def checkData(row):
         row[14] = INVAlID
         return
     name = row[1]
+    analy_result = list()
     ## flag=0 下载高德位置数据
     if addr_flag == INIT:
         if( address != address):
@@ -122,7 +123,7 @@ def checkData(row):
                 poisList = poisDict['pois']
                 poisList = checkAddress(poisList)
                 match_result = match(poisList, address, name)
-                row[12] = match_result
+                analy_result = analy_result + match_result
                 row[13] = match_result[:1]
                 row[14] = DEAL
                 addr_flag = DEAL
@@ -137,11 +138,14 @@ def checkData(row):
                 poisList = poisDict['pois']
                 poisList = checkAddress(poisList)
                 match_result = match(poisList, address, name)
-                print(type(row[12]))
-                row[12] = row[12] + match_result[:1]
+                analy_result = analy_result + match_result[:1]
                 name_flag = DEAL
     row[7] = addr_flag
     row[9] = name_flag
+    row[11] = DEAL
+    row[12] = analy_result
+    row[13] = analy_result[:1]
+    row[14] = DEAL
     return row
 
 
@@ -204,8 +208,33 @@ def match(poisList, address, name):
         result.append(item)
     return list(sorted(result, key= lambda x:x['score'],  reverse=True))[:3]
 
+def match_part(poisList, address, name):
+    result = list()
+    for pois in poisList:
+        pois_name = pois['name']
+        pois_address = pois['address']
+        if address != address:
+            r1 = 0
+            r2 = 0
+        else:
+            r1 = fuzz.partial_token_set_ratio(pois_address, address)
+            r2 = fuzz.partial_token_set_ratio(pois_name, address)
+        r3 = fuzz.partial_token_set_ratio(pois_name, name)
+        r4 = fuzz.partial_token_set_ratio(pois_address, name)
+        score = max(r1, r2, r3, r4)
+        item = {'name': pois_name, 'address': pois_address, 'score': score, 'location': pois['location']}
+        result.append(item)
+    return list(sorted(result, key=lambda x: x['score'], reverse=True))[:3]
 
-checkFile('customer1566543460026161400')
+def showData(fileName, row, col=None):
+    records = pd.read_csv(fileName, sep='\t', header=None)
+    pd.set_option('max_colwidth', 200)
+    if col:
+        print(records.loc[row][col])
+    else:
+        print(records.loc[row])
+
+#checkFile('customer1566614010020670500')
 
 
 

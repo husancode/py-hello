@@ -55,10 +55,9 @@ def statSystem():
     plt.show()
 
 #printColumn()
-statTz()
 #statBrowser()
 
-statSystem()
+statTzAndShow()
 
 
 
