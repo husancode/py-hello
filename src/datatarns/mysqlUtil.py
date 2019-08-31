@@ -4,14 +4,15 @@ def connInit():
     conn = pymysql.connect(host=DB[0], user=DB[1], passwd=DB[2], db=DB[3], port=DB[4], charset="utf8")
     return conn
 
-def getTables(ignore):
+def getTables(ignore, conn=None):
     """
     返回数据库所有的表（不包含视图）
     :param ignore:排除某些表
     :return:
     """
     showTables = r"show tables"
-    conn = connInit()
+    if(not conn):
+        conn = connInit()
     cur = conn.cursor()
     cur.execute(showTables)
     tables = cur.fetchall()

@@ -6,7 +6,7 @@ import logging
 import re
 logging.basicConfig(level=logging.INFO)
 
-conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment-20190810", port=3306, charset="utf8")
+conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment-amap", port=3306, charset="utf8")
 cur = conn.cursor()
 
 def check():
@@ -55,7 +55,8 @@ def modify_zone():
             cur.execute(sql)
     print(i)
     conn.commit()
-revert_customer()
+
+check()
 
 cur.close()
 conn.close()

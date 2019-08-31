@@ -3,7 +3,6 @@ import time
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
-
 conn = pymysql.connect(host='192.168.50.178', user = "root", passwd="123456", db="equipment", port=3306, charset="utf8")
 cur = conn.cursor()
 

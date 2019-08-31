@@ -29,7 +29,7 @@ def getCheckData():
     conn = pymysql.connect(host=DB[0], user=DB[1], passwd=DB[2], db=DB[3], port=DB[4], charset="utf8")
     cur = conn.cursor()
 
-    sql = r"SELECT * FROM t_install_customer"
+    sql = r"SELECT * FROM t_install_customer WHERE coordinate IS NULL OR coordinate LIKE '%0.000%'"
     cur.execute(sql)
     records = cur.fetchall()
     cur.close()
@@ -44,7 +44,7 @@ def getCheckData():
     18: coordinate_level
     """
     frame = DataFrame(records)
-    frame = frame[ frame[18].isnull() | (frame[18] > '西湖区&3|3') | (frame[18] == '')]
+    #frame = frame[ frame[18].isnull() | (frame[18] > '西湖区&3|3') | (frame[18] == '')]
     records = frame[[0,2,4,5,6,17,18]].sort_values(by=18 , ascending=False)
     level = frame[18]
     level_count = level.value_counts()
@@ -234,8 +234,16 @@ def showData(fileName, row, col=None):
     else:
         print(records.loc[row])
 
-#checkFile('customer1566614010020670500')
 
+def getData(fileName, customerId):
+    records = pd.read_csv(fileName, sep='\t', header=None)
+    records = records[records[0]== customerId]
+    row = records.iloc[0]
+    print(row[12])
+
+#getData('customer1566614010020670500', '5a9a4e56672c4659a0ff90ba1d6434ea')
+
+checkFile()
 
 
 

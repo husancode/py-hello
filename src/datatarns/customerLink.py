@@ -42,6 +42,9 @@ for customer in customers:
     sql3 = r"update t_check_task_crm set crm_addr_name='{}',crm_addr_detail='{}',update_date=now() where crm_id='{}'".format(customer[2], customer[3], customer[0])
     cur.execute(sql3)
 
+    sql4 = r"update t_check_batch_crm set crm_addr_name='{}', crm_addr_detail='{}', update_date=now() where crm_id='{}'".format(customer[2], customer[3], customer[0])
+    cur.execute(sql4)
+
 cur.close()
 conn.commit()
 conn.close()
