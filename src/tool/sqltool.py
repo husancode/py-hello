@@ -164,7 +164,7 @@ def syncDB(src, dest):
     """
     import time
     start = time.time()
-    ignore = set(['t_operation_log','t_sensor_alarm_detail','t_sensor_action','t_app_sys_msg','t_nb_dtu_status_history','t_sensor_alarm_msg','t_sensor_base'])
+    ignore = set(['t_operation_log'])
     tables = getTables(src, ignore)
     for table in tables:
         syncData(src, dest, table, create=True)

@@ -3,9 +3,9 @@
 #import ZoneGisCheck
 #print('Zone坐标初始化完成！')
 print('t_sys_division数据初始化')
-import SysDivisonCheck
-SysDivisonCheck.transData()
-SysDivisonCheck.transData()
+# import SysDivisonCheck
+# SysDivisonCheck.transData()
+# SysDivisonCheck.transData()
 print('t_sys_division数据初始化完成')
 
 print('客户区域信息初始化开始')

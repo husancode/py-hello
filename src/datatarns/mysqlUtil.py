@@ -56,7 +56,7 @@ def tableScan(ignore, *field):
     return divisionIdList
 
 class tableUtil(object):
-    _ignore = set(['zone','t_install_customer_2019','t_amap_basics','ess_station_area_ref','t_amap_division','ess_plan_area','stat_area_customer','stat_area_sensor'])
+    _ignore = set(['t_amap_division_copy1','t_deposit_info','zone','t_install_customer_2019','t_amap_basics','ess_station_area_ref','t_amap_division','ess_plan_area','stat_area_customer','stat_area_sensor'])
     _root = None
     _tables = None
 
@@ -104,7 +104,7 @@ class tableUtil(object):
         return result
 
     @classmethod
-    def checkDivision(cls, division):
+    def checkDivision(cls, division, doc=None):
         """
         检查是表是否有关联division
         :param division:
@@ -122,6 +122,8 @@ class tableUtil(object):
             conn.close()
             if row:
                 print('table {} exist division_id:{},name:{}'.format(table, division[0], division[2]))
+                if  doc:
+                    print('{}:{}:{}'.format(table, division[0], division[2]), file=doc)
                 flag = False
                 break
         return flag
@@ -134,11 +136,11 @@ class tableUtil(object):
         """
         result = []
         divisions = cls.scanSysDivision(level)
-        print
-        for division in divisions:
-            flag = cls.checkDivision(division)
-            if flag:
-                result.append(division)
+        with open('F://清理失败.txt', 'w', encoding='utf-8') as doc:
+            for division in divisions:
+                flag = cls.checkDivision(division, doc)
+                if flag:
+                    result.append(division)
         return result
 
     @classmethod

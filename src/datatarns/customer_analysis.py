@@ -241,9 +241,11 @@ def getData(fileName, customerId):
     row = records.iloc[0]
     print(row[12])
 
-#getData('customer1566614010020670500', '5a9a4e56672c4659a0ff90ba1d6434ea')
 
-checkFile()
+showData('customer1567164842140756700', 5)
+getData('customer1567164842140756700', '78362339b4db4ae5a9534f3357611b33')
+
+#checkFile()
 
 
 
