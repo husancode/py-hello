@@ -1,3 +1,4 @@
 import pymysql
 
-print(pymysql.escape_string(s))
+for a in range(7):
+    print(a+1)
