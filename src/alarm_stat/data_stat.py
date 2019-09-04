@@ -11,13 +11,17 @@ import matplotlib.pyplot as plt
 import json
 
 path = 'E://stat/smoker.dat'
+path_alarm = 'E://stat/alarm.dat'
 day_file = 'smoker-day.stat'
 month_file = 'smoker-month.stat'
 hour_file = 'smoker-hour.stat'
 hour1_file = 'smoker-hour1.stat'
+
 ##读取文件每行数据，json转为dict对象
 records = [json.loads(json.dumps(eval(line))) for line in open(path)]
 df = DataFrame(records)
+pd.set_option('max_colwidth', 200)
+
 # tz_count = df['value'].value_counts()
 # print(tz_count)
 #
@@ -32,6 +36,7 @@ def dayCount():
     day_base_count = df1.groupby(['happenTime']).baseId.nunique()
     day_count = pd.merge(day_alarm_count, day_base_count, on='happenTime')
     return day_count
+
 def monthCount():
     df1 = df.copy()
     df1['happenTime'] = df1.apply(lambda x: x.happenTime[0:7], axis=1)
@@ -211,9 +216,60 @@ def statByHourAndDevice():
     plt.grid()
     plt.show()
 
+def showDeviceByHourStatAlarm(baseId, start, end):
+    df1 = df.copy()
+    df1 = df1[(df1['baseId'] == baseId) & (df1['happenTime'] >= start) & (df1['happenTime'] < end)]
+    if df1.empty:
+        print('no alarm data')
+        return
+    df1['happenTime'] = df1.apply(lambda x: x.happenTime[0:13], axis=1)
+    hour_alarm_count = df1.groupby(['happenTime']).id.count()
+    print(hour_alarm_count)
+    ax = hour_alarm_count.plot(x='happenTime', y=['id'], title=baseId, figsize=(20, 10))
+
+    alarms = [json.loads(json.dumps(eval(line))) for line in open(path_alarm)]
+    df2 = DataFrame(alarms)
+    df2 = df2[(df2['baseId'] == baseId) & (df2['alarmDate'] >= start) & (df2['alarmDate'] < end)]
+    if df2.empty:
+        print('no alarm data')
+        return
+    df2['alarmDate'] = df2.apply(lambda x: x.alarmDate[0:13], axis=1)
+    hour_alarm_count2 = df2.groupby(['alarmDate']).id.count()
+    print(hour_alarm_count2)
+    hour_alarm_count2.plot(x='alarmDate', y=['id'], title=baseId, figsize=(20, 10), ax= ax)
+    plt.legend()
+    plt.tight_layout()
+    plt.grid()  # 生成网格
+    plt.show()
+
+def showDeviceAlarm(baseId, start, end):
+    df1 = df.copy()
+    df1 = df1[(df1['baseId'] == baseId) & (df1['happenTime'] >= start) & (df1['happenTime'] < end)]
+    if df1.empty:
+        print('no alarm data')
+        return
+    df1['happenTime'] = df1.apply(lambda x:  float(x.happenTime[:-5].replace('-','').replace(':','').replace('T','')), axis=1)
+    ax = df1.plot.scatter(x='happenTime', y='value')
+    #
+    # alarms = [json.loads(json.dumps(eval(line))) for line in open(path_alarm)]
+    # df2 = DataFrame(alarms)
+    # df2 = df2[(df2['baseId'] == baseId) & (df2['alarmDate'] >= start) & (df2['alarmDate'] < end)]
+    # if df2.empty:
+    #     print('no alarm data')
+    #     return
+    # df2['alarmDate'] = df2.apply(lambda x: x.alarmDate[0:13], axis=1)
+    # hour_alarm_count2 = df2.groupby(['alarmDate']).id.count()
+    # print(hour_alarm_count2)
+    # hour_alarm_count2.plot(x='alarmDate', y=['id'], title=baseId, figsize=(20, 10), ax= ax)
+    plt.legend()
+    plt.tight_layout()
+    plt.grid()  # 生成网格
+    plt.show()
+
 #showDeviceStat('2019-08-01','2019-09-01')
-#showDeviceByHourStat('0eadde314a54479c976951aaaefe4ea1','2019-01-01','2019-09-01')
-statByHourAndDevice()
+showDeviceByHourStatAlarm('3ff78d1dab8242a288ac95bcf9aa58a8','2019-04-15','2019-09-01')
+#statByHourAndDevice()
+#print(df.describe(include='all')[['smokeId','happenTime']])
 
 #showValue()
 #按月报警统计

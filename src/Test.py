@@ -1,4 +1,8 @@
 import pymysql
+import random
 
-for a in range(7):
-    print(a+1)
+import uuid
+def getUUID():
+    return "".join(str(uuid.uuid4()).split("-"))
+
+print(getUUID())

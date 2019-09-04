@@ -49,6 +49,7 @@ def testTable(table, *field):
 
 def tableScan(ignore, *field):
     tables = getTables(ignore)
+    tables.insert(0, 't_install_customer')
     divisionIdList = []
     for table in tables:
         if(testTable(table,*field)):

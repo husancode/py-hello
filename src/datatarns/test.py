@@ -1,3 +1,3 @@
-l = ['t_check_task','t_sys_user']
-if 't_check_task1' in l:
-    print('sdf')
+s = '2019-05-10T13:07:02.036Z'
+
+print(s[:-5])
